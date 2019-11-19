@@ -1,4 +1,6 @@
-﻿using Kontest.Model.Entities;
+﻿using Kontest.Data.Configurations;
+using Kontest.Data.Extenstions;
+using Kontest.Model.Entities;
 using Kontest.Model.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -34,6 +36,8 @@ namespace Kontest.Data
             builder.Entity<IdentityUserLogin<Guid>>().ToTable("ApplicationUserLogins").HasKey(x => x.UserId);
             builder.Entity<IdentityUserRole<Guid>>().ToTable("ApplicationUserRoles").HasKey(x => new { x.RoleId, x.UserId });
             builder.Entity<IdentityUserToken<Guid>>().ToTable("ApplicationUserTokens").HasKey(x => new { x.UserId });
+
+            builder.AddConfiguration(new UserOrganizationConfiguration());
         }
 
         public override int SaveChanges()

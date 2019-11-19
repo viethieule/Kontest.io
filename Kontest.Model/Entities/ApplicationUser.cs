@@ -22,7 +22,7 @@ namespace Kontest.Model.Entities
 
         public string ProfilePicture { get; set; }
 
-        public virtual IEnumerable<Organization> Organizations { get; set; }
+        public virtual IEnumerable<UserOrganization> UserOrganizations { get; set; }
 
         // Audit fields
         public DateTime? CreatedDate { get; set; }

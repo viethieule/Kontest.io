@@ -18,7 +18,7 @@ namespace Kontest.Model.Entities
         [ForeignKey("OrganizationCategoryId")]
         public virtual OrganizationCategory OrganizationCategory { get; set; }
 
-        public int RequestingUserId { get; set; }
+        public Guid RequestingUserId { get; set; }
         
         [ForeignKey("UserId")]
         public virtual ApplicationUser RequestingUser { get; set; }

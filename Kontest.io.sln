@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontest.Model", "Kontest.Mo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontest.Infrastructure", "Kontest.Infrastructure\Kontest.Infrastructure.csproj", "{D81CDDCC-D620-4FB5-8D9A-E0B70EB8B17B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontest.Service", "Kontest.Service\Kontest.Service.csproj", "{739302F1-BC8E-46F0-8CC3-620E37EE1A50}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontest.Service", "Kontest.Service\Kontest.Service.csproj", "{739302F1-BC8E-46F0-8CC3-620E37EE1A50}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontest.Web", "Kontest.Web\Kontest.Web.csproj", "{C5FAAA60-B595-45F6-9583-7388CA4967AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{739302F1-BC8E-46F0-8CC3-620E37EE1A50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{739302F1-BC8E-46F0-8CC3-620E37EE1A50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{739302F1-BC8E-46F0-8CC3-620E37EE1A50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5FAAA60-B595-45F6-9583-7388CA4967AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5FAAA60-B595-45F6-9583-7388CA4967AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5FAAA60-B595-45F6-9583-7388CA4967AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5FAAA60-B595-45F6-9583-7388CA4967AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

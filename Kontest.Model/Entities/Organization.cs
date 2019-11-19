@@ -23,7 +23,7 @@ namespace Kontest.Model.Entities
         [ForeignKey("OrganizationRequestId")]
         public virtual OrganizationRequest OrganizationRequest { get; set; }
 
-        public virtual IEnumerable<ApplicationUser> ApplicationUsers { get; set; }
+        public virtual IEnumerable<UserOrganization> UserOrganizations { get; set; }
 
         public virtual IEnumerable<Event> Events { get; set; }
 
