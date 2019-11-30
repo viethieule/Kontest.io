@@ -21,7 +21,7 @@ namespace Kontest.Data
         }
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-        public DbSet<ApplicationRole> ApplicationRole { get; set; }
+        public DbSet<ApplicationRole> ApplicationRoles { get; set; }
 
         public DbSet<Event> Events { get; set; }
         public DbSet<Organization> Organizations { get; set; }

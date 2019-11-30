@@ -25,7 +25,7 @@ namespace Kontest.Model.Entities
 
         public int? CreatedOrganizationId { get; set; }
 
-        [ForeignKey("OrganizationId")]
+        [ForeignKey("CreatedOrganizationId")]
         public virtual Organization CreatedOrganization { get; set; }
 
         public int ActionTypeCode { get; set; }
