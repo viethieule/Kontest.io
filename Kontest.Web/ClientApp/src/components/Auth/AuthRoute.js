@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import React, { Component } from 'react'
+import { Route, Redirect } from 'react-router-dom'
 import authService from '../../services/AuthService'
+import { ApplicationPaths, QueryParameterNames } from '../../constants/Auth/AuthConstants'
 
 class AuthRoute extends Component {
     constructor(props) {
@@ -23,7 +24,7 @@ class AuthRoute extends Component {
 
     render() {
         const { ready, authenticated } = this.state;
-        const redirectUrl = '';
+        const redirectUrl = `${ApplicationPaths.Login}?${QueryParameterNames.ReturnUrl}=${encodeURI(window.location.href)}`;
         if (!ready) {
             return <div></div>;
         } else {
@@ -33,6 +34,7 @@ class AuthRoute extends Component {
                     if (authenticated) {
                         return <Component {...props} />
                     } else {
+                        debugger;
                         return <Redirect to={redirectUrl} />
                     }
                 }} />
@@ -40,11 +42,11 @@ class AuthRoute extends Component {
     }
 
     async populateAuthenticationState() {
-        const authenticated = await authService
+        const authenticated = await authService.isAuthenticated();
         this.setState({
             ready: true,
             authenticated
-        })
+        });
     }
 
     async authenticationChanged() {

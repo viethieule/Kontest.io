@@ -52,7 +52,7 @@ namespace Kontest.WebApi
                     options.Authority = "https://localhost:5000";
                     options.RequireHttpsMetadata = false;
 
-                    options.ApiName = "api1";
+                    options.ApiName = "Kontest.Api";
                 });
 
             services.AddCors(options =>

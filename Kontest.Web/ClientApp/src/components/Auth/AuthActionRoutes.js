@@ -4,7 +4,7 @@ import { Login } from './Login'
 import { Logout } from './Logout'
 import { ApplicationPaths, LoginActions, LogoutActions } from '../../constants/Auth/AuthConstants';
 
-export default class ApiAuthorizationRoutes extends Component {
+export default class AuthActionRoutes extends Component {
 
   render () {
     return(

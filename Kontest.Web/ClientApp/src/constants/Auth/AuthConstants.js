@@ -1,4 +1,4 @@
-export const ApplicationName = 'authreact';
+export const ApplicationName = 'Kontest';
 
 export const QueryParameterNames = {
   ReturnUrl: 'returnUrl',
@@ -23,8 +23,7 @@ const prefix = '/authentication';
 
 export const ApplicationPaths = {
   DefaultLoginRedirectPath: '/',
-  ApiAuthorizationClientConfigurationUrl: `/_configuration/${ApplicationName}`,
-  ApiAuthorizationPrefix: prefix,
+  AuthorizationPrefix: prefix,
   Login: `${prefix}/${LoginActions.Login}`,
   LoginFailed: `${prefix}/${LoginActions.LoginFailed}`,
   LoginCallback: `${prefix}/${LoginActions.LoginCallback}`,

@@ -19,7 +19,7 @@ namespace Kontest.IdentityServer
         public static IEnumerable<ApiResource> Apis =>
             new ApiResource[]
             {
-                new ApiResource("api1", "My API #1")
+                new ApiResource("Kontest.Api", "Kontest Api")
             };
 
         public static IEnumerable<Client> Clients =>
@@ -34,7 +34,7 @@ namespace Kontest.IdentityServer
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
                     ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
 
-                    AllowedScopes = { "api1" }
+                    AllowedScopes = { "Kontest.Api" }
                 },
 
                 // MVC client using code flow + pkce
@@ -52,14 +52,14 @@ namespace Kontest.IdentityServer
                     PostLogoutRedirectUris = { "http://localhost:5003/signout-callback-oidc" },
 
                     AllowOfflineAccess = true,
-                    AllowedScopes = { "openid", "profile", "api1" }
+                    AllowedScopes = { "openid", "profile", "Kontest.Api" }
                 },
 
                 // SPA client using code flow + pkce
                 new Client
                 {
-                    ClientId = "spa",
-                    ClientName = "SPA Client",
+                    ClientId = "react",
+                    ClientName = "Kontest React",
                     ClientUri = "http://identityserver.io",
 
                     AllowedGrantTypes = GrantTypes.Code,
@@ -68,16 +68,13 @@ namespace Kontest.IdentityServer
 
                     RedirectUris =
                     {
-                        "http://localhost:5100/index.html",
-                        "http://localhost:5100/callback.html",
-                        "http://localhost:5100/silent.html",
-                        "http://localhost:5100/popup.html",
+                        "https://localhost:5100/authentication/login-callback/",
                     },
 
-                    PostLogoutRedirectUris = { "http://localhost:5100/index.html" },
-                    AllowedCorsOrigins = { "http://localhost:5100" },
+                    PostLogoutRedirectUris = { "https://localhost:5100/authentication/logout-callback" },
+                    AllowedCorsOrigins = { "https://localhost:5100" },
 
-                    AllowedScopes = { "openid", "profile", "api1" }
+                    AllowedScopes = { "openid", "profile", "Kontest.Api" }
                 }
             };
     }

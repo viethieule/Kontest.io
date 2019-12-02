@@ -41,7 +41,6 @@ export class AuthorizeService {
     // 3) If the two methods above fail, we redirect the browser to the IdP to perform a traditional
     //    redirect flow.
     async signIn(state) {
-        debugger;
         await this.ensureUserManagerInitialized();
         try {
             const silentUser = await this.userManager.signinSilent(this.createArguments());
@@ -180,18 +179,19 @@ export class AuthorizeService {
             return;
         }
 
-        let response = await fetch(ApplicationPaths.ApiAuthorizationClientConfigurationUrl);
-        if (!response.ok) {
-            throw new Error(`Could not load settings for '${ApplicationName}'`);
-        }
-
-        let settings = await response.json();
-        debugger;
-        settings.automaticSilentRenew = true;
-        settings.includeIdTokenInSilentRenew = true;
-        settings.userStore = new WebStorageStateStore({
-            prefix: ApplicationName
-        });
+        const settings = {
+            authority: "https://localhost:5000",
+            client_id: "react",
+            post_logout_redirect_uri: `https://localhost:5100${ApplicationPaths.LogOutCallback}/`,
+            redirect_uri: `https://localhost:5100${ApplicationPaths.LoginCallback}/`,
+            response_type: "code",
+            scope: "openid profile Kontest.Api",
+            automaticSilentRenew: true,
+            includeIdTokenInSilentRenew: true,
+            userStore: new WebStorageStateStore({
+                prefix: ApplicationName
+            })
+        };
 
         this.userManager = new UserManager(settings);
 
