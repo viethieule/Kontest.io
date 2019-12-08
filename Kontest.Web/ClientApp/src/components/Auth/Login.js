@@ -3,6 +3,7 @@ import { Component } from 'react';
 import authService from '../../services/AuthService';
 import { AuthenticationResultStatus } from '../../services/AuthService';
 import { LoginActions, QueryParameterNames, ApplicationPaths } from '../../constants/Auth/AuthConstants';
+import { Register } from './Register';
 
 // The main responsibility of this component is to handle the user's login process.
 // This is the starting point for the login process. Any component that needs to authenticate
@@ -32,10 +33,7 @@ export class Login extends Component {
                 this.setState({ message: error });
                 break;
             case LoginActions.Profile:
-                this.redirectToProfile();
-                break;
             case LoginActions.Register:
-                this.redirectToRegister();
                 break;
             default:
                 throw new Error(`Invalid action '${action}'`);
@@ -56,7 +54,7 @@ export class Login extends Component {
                     return (<div>Processing login callback</div>);
                 case LoginActions.Profile:
                 case LoginActions.Register:
-                    return (<div></div>);
+                    return (<Register />);
                 default:
                     throw new Error(`Invalid action '${action}'`);
             }
@@ -65,7 +63,8 @@ export class Login extends Component {
 
     async login(returnUrl) {
         const state = { returnUrl };
-        const result = await authService.signIn(state);
+        const optionalAuthSettings = this.props.location && this.props.location.state.optionalAuthSettings;
+        const result = await authService.signIn(state, optionalAuthSettings);
         switch (result.status) {
             case AuthenticationResultStatus.Redirect:
                 break;

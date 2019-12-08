@@ -24,6 +24,9 @@ namespace Kontest.Model.Entities
 
         public virtual IEnumerable<UserOrganization> UserOrganizations { get; set; }
 
+        public string OTAC { get; set; }
+        public DateTime? OTACExpires { get; set; }
+
         // Audit fields
         public DateTime? CreatedDate { get; set; }
 

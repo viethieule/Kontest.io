@@ -46,6 +46,17 @@ namespace Kontest.WebApi
                 config.Filters.Add(new AuthorizeFilter(policy)); //global authorize filter
             }).AddAuthorization();
 
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+            })
+                .AddEntityFrameworkStores<KontestDbContext>()
+                .AddDefaultTokenProviders();
+
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication(options =>
                 {

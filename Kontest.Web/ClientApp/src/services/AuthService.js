@@ -40,10 +40,13 @@ export class AuthorizeService {
     //    Pop-Up blocker or the user has disabled PopUps.
     // 3) If the two methods above fail, we redirect the browser to the IdP to perform a traditional
     //    redirect flow.
-    async signIn(state) {
+    // The optional authorization settings is another parameter that can be passed to authorization server
+    async signIn(state, optionalAuthSettings = {}) {
         await this.ensureUserManagerInitialized();
         try {
-            const silentUser = await this.userManager.signinSilent(this.createArguments());
+            // Manage silent signin after register with optional settings (otac)
+            const args = Object.assign({}, this.createArguments(), optionalAuthSettings);
+            const silentUser = await this.userManager.signinSilent(args);
             this.updateState(silentUser);
             return this.success(state);
         } catch (silentError) {

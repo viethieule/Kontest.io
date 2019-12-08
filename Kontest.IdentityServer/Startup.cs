@@ -2,8 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using Kontest.Data;
+using Kontest.IdentityServer.Quickstart;
 using Kontest.Infrastructure.Interfaces;
 using Kontest.Model.Entities;
+using Kontest.Service.Implementations;
+using Kontest.Service.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -48,11 +51,15 @@ namespace Kontest.IdentityServer
 
             // Add user service
             services.AddScoped<UserManager<ApplicationUser>, UserManager<ApplicationUser>>();
+            services.AddScoped<SignInManager<ApplicationUser>, SignInManager<ApplicationUser>>();
             services.AddScoped<RoleManager<ApplicationRole>, RoleManager<ApplicationRole>>();
 
             // Add repository and unit of work
             services.AddTransient(typeof(IUnitOfWork), typeof(EFUnitOfWork));
             services.AddTransient(typeof(IRepository<,>), typeof(EFRepository<,>));
+
+            // Add Kontest service
+            services.AddTransient<IUserService, UserService>();
 
             services.AddIdentity<ApplicationUser, ApplicationRole>(options => 
                 {
@@ -72,6 +79,7 @@ namespace Kontest.IdentityServer
                     options.Events.RaiseFailureEvents = true;
                     options.Events.RaiseSuccessEvents = true;
                 })
+                .AddAuthorizeInteractionResponseGenerator<SignupFlowResponseGenerator>()
                 .AddInMemoryIdentityResources(Config.Ids)
                 .AddInMemoryApiResources(Config.Apis)
                 .AddInMemoryClients(Config.Clients)
