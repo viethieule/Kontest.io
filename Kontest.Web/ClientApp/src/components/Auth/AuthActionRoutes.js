@@ -9,7 +9,7 @@ export default class AuthActionRoutes extends Component {
   render () {
     return(
       <Fragment>
-          <Route path={ApplicationPaths.Login} render={() => loginAction(LoginActions.Login)} />
+          <Route path={ApplicationPaths.Login} render={(props) => <Login {...props} action={LoginActions.Login}></Login>} />
           <Route path={ApplicationPaths.LoginFailed} render={() => loginAction(LoginActions.LoginFailed)} />
           <Route path={ApplicationPaths.LoginCallback} render={() => loginAction(LoginActions.LoginCallback)} />
           <Route path={ApplicationPaths.Profile} render={() => loginAction(LoginActions.Profile)} />
@@ -22,6 +22,7 @@ export default class AuthActionRoutes extends Component {
 }
 
 function loginAction(name){
+    debugger;
     return (<Login action={name}></Login>);
 }
 

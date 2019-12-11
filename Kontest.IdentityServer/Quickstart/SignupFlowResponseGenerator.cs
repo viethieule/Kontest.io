@@ -88,8 +88,7 @@ namespace Kontest.IdentityServer.Quickstart
                     var claims = new[]
                     {
                         new Claim(JwtClaimTypes.Name, user.UserName),
-                        new Claim(JwtClaimTypes.Email, user.Email),
-                        new Claim(JwtClaimTypes.IdentityProvider, request.Subject.GetIdentityProvider())
+                        new Claim(JwtClaimTypes.Email, user.Email)
                     };
 
                     var svr = new IdentityServerUser(user.Id.ToString())

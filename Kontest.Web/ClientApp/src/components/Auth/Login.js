@@ -2,8 +2,9 @@ import React from 'react'
 import { Component } from 'react';
 import authService from '../../services/AuthService';
 import { AuthenticationResultStatus } from '../../services/AuthService';
-import { LoginActions, QueryParameterNames, ApplicationPaths } from '../../constants/Auth/AuthConstants';
+import { LoginActions, QueryParameterNames } from '../../constants/Auth/AuthConstants';
 import { Register } from './Register';
+import { Profile } from '../Profile/Profile'
 
 // The main responsibility of this component is to handle the user's login process.
 // This is the starting point for the login process. Any component that needs to authenticate
@@ -19,6 +20,7 @@ export class Login extends Component {
     }
 
     componentDidMount() {
+        debugger;
         const action = this.props.action;
         switch (action) {
             case LoginActions.Login:
@@ -53,6 +55,7 @@ export class Login extends Component {
                 case LoginActions.LoginCallback:
                     return (<div>Processing login callback</div>);
                 case LoginActions.Profile:
+                    return (<Profile />);
                 case LoginActions.Register:
                     return (<Register />);
                 default:
@@ -63,7 +66,8 @@ export class Login extends Component {
 
     async login(returnUrl) {
         const state = { returnUrl };
-        const optionalAuthSettings = this.props.location && this.props.location.state.optionalAuthSettings;
+        debugger;
+        const optionalAuthSettings = this.props.location.state && this.props.location.state.optionalAuthSettings;
         const result = await authService.signIn(state, optionalAuthSettings);
         switch (result.status) {
             case AuthenticationResultStatus.Redirect:
@@ -106,14 +110,6 @@ export class Login extends Component {
             throw new Error("Invalid return url. The return url needs to have the same origin as the current page.")
         }
         return (state && state.returnUrl) || fromQuery || `${window.location.origin}/`;
-    }
-
-    redirectToRegister() {
-        this.redirectToIdentityServerPath(`${ApplicationPaths.IdentityRegisterPath}?${QueryParameterNames.ReturnUrl}=${encodeURI(ApplicationPaths.Login)}`);
-    }
-
-    redirectToProfile() {
-        this.redirectToIdentityServerPath(ApplicationPaths.IdentityManagePath);
     }
 
     redirectToIdentityServerPath(apiAuthorizationPath) {
