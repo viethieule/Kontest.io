@@ -13,7 +13,7 @@ namespace Kontest.Model.Entities
         [ForeignKey("UserId")]
         public ApplicationUser User { get; set; }
 
-        public int OrganizationId { get; set; }
+        public Guid OrganizationId { get; set; }
         [ForeignKey("OrganizationId")]
         public virtual Organization Organization { get; set; }
 

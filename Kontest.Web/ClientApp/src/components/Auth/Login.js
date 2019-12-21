@@ -20,7 +20,6 @@ export class Login extends Component {
     }
 
     componentDidMount() {
-        debugger;
         const action = this.props.action;
         switch (action) {
             case LoginActions.Login:
@@ -45,7 +44,6 @@ export class Login extends Component {
     render() {
         const action = this.props.action;
         const { message } = this.state;
-        debugger;
         if (!!message) {
             return <div>{message}</div>
         } else {
@@ -66,7 +64,6 @@ export class Login extends Component {
 
     async login(returnUrl) {
         const state = { returnUrl };
-        debugger;
         const optionalAuthSettings = this.props.location.state && this.props.location.state.optionalAuthSettings;
         const result = await authService.signIn(state, optionalAuthSettings);
         switch (result.status) {

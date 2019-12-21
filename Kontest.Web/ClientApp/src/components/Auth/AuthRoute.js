@@ -34,7 +34,6 @@ class AuthRoute extends Component {
                     if (authenticated) {
                         return <Component {...props} />
                     } else {
-                        debugger;
                         return <Redirect to={redirectUrl} />
                     }
                 }} />

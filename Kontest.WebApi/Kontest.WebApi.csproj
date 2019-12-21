@@ -21,4 +21,8 @@
     <ProjectReference Include="..\Kontest.Service\Kontest.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 </Project>

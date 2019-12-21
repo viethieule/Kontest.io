@@ -28,7 +28,6 @@ export class Register extends Component {
 
     async handleSubmit(event) {
         event.preventDefault();
-        debugger;
         var response = await fetch('https://localhost:5200/api/account/register', {
             method: 'POST',
             mode: 'cors',
@@ -40,7 +39,6 @@ export class Register extends Component {
         });
 
         const otac = await response.text();
-        debugger;
         if (!!otac) {
             this.setState({ Otac: otac });
         }

@@ -22,7 +22,6 @@ export default class AuthActionRoutes extends Component {
 }
 
 function loginAction(name){
-    debugger;
     return (<Login action={name}></Login>);
 }
 

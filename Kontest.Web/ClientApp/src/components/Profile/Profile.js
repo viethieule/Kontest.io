@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import authService from '../../services/AuthService'
 import { Redirect } from 'react-router-dom'
-import { ApplicationPaths } from '../../constants/Auth/AuthConstants';
+import { ApplicationPaths } from '../../constants/Auth/AuthConstants'
+import { User } from '../User/User';
 
 export class Profile extends Component {
     constructor(props) {
@@ -22,7 +23,7 @@ export class Profile extends Component {
             return <div></div>
         } else {
             if (!!user) {
-                return <h1>{user.sub}</h1>
+                return <User id={user.sub} />
             }
             else {
                 return <Redirect to={ApplicationPaths.Login} />
@@ -31,14 +32,12 @@ export class Profile extends Component {
     }
 
     async populateUserData() {
-        setTimeout(async () => {
-            const user = await authService.getUser();
-            if (!!user) {
-                this.setState({ user: user, loading: false });
-            }
-            else {
-                this.setState({ loading: false })
-            }
-        }, 2000);
+        const user = await authService.getUser();
+        if (!!user) {
+            this.setState({ user: user, loading: false });
+        }
+        else {
+            this.setState({ loading: false })
+        }
     }
 }
