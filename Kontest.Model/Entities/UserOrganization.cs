@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Kontest.Infrastructure.SharedKernel;
+using Kontest.Model.Enums;
 using Kontest.Model.Interfaces;
 
 namespace Kontest.Model.Entities
@@ -13,11 +14,11 @@ namespace Kontest.Model.Entities
         [ForeignKey("UserId")]
         public ApplicationUser User { get; set; }
 
-        public Guid OrganizationId { get; set; }
+        public int OrganizationId { get; set; }
         [ForeignKey("OrganizationId")]
         public virtual Organization Organization { get; set; }
 
-        public int RoleTypeCode { get; set; }
+        public OrgnizationUserRoleType OrgnizationUserRoleType { get; set; }
 
         public DateTime AssignedDate { get; set; }
 

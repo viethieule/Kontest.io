@@ -12,6 +12,6 @@ namespace Kontest.Service.Interfaces
         ApplicationUser FindUserByOtac(string otac);
         Task<string> Register(UserViewModel model);
         Task<ApplicationUser> GetUserById(string id);
-        List<ApplicationUser> GetUsersByOrganizationId(string id);
+        List<UserViewModel> GetUsersByOrganizationId(int id);
     }
 }

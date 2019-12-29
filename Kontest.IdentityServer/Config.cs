@@ -65,6 +65,7 @@ namespace Kontest.IdentityServer
                     AllowedGrantTypes = GrantTypes.Code,
                     RequirePkce = true,
                     RequireClientSecret = false,
+                    RequireConsent = false,
 
                     RedirectUris =
                     {

@@ -10,6 +10,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace Kontest.Service.Implementations
 {
@@ -17,19 +20,22 @@ namespace Kontest.Service.Implementations
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
-        private readonly IRepository<UserOrganization, Guid> _userOrgnizationRepository;
+        private readonly IRepository<UserOrganization, int> _userOrgnizationRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
         public UserService(
             UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
-            IRepository<UserOrganization, Guid> userOrgnizationRepository,
+            IRepository<UserOrganization, int> userOrganizationRepository,
+            IMapper mapper,
             IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _roleManager = roleManager;
-            _userOrgnizationRepository = userOrgnizationRepository;
+            _userOrgnizationRepository = userOrganizationRepository;
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public ApplicationUser FindUserByOtac(string otac)
@@ -74,14 +80,18 @@ namespace Kontest.Service.Implementations
             return user;
         }
 
-        public List<ApplicationUser> GetUsersByOrganizationId(string id)
+        public List<UserViewModel> GetUsersByOrganizationId(int id)
         {
-            var users = _userOrgnizationRepository
-                .FindAll(x => x.OrganizationId.Equals(new Guid(id)), x => x.User)
-                .Select(x => x.User)
+            var userOrganizations = _userOrgnizationRepository
+                .FindAll(x => x.OrganizationId == id, x => x.User);
+
+            var users2 = _userManager.Users
+                .Include(u => u.UserOrganizations)
+                .Where(u => u.UserOrganizations.Any(uo => uo.OrganizationId == id))
+                .ProjectTo<UserViewModel>(_mapper.ConfigurationProvider)
                 .ToList();
 
-            return users;
+            return users2;
         }
     }
 }

@@ -81,6 +81,11 @@ export class AuthorizeService {
         }
     }
 
+    async signInSilent() {
+        await this.ensureUserManagerInitialized();
+        await this.userManager.signinSilentCallback();
+    }
+
     async completeSignIn(url) {
         try {
             await this.ensureUserManagerInitialized();
@@ -201,6 +206,16 @@ export class AuthorizeService {
         this.userManager.events.addUserSignedOut(async () => {
             await this.userManager.removeUser();
             this.updateState(undefined);
+        });
+
+        this.userManager.events.addAccessTokenExpired(async () => {
+            const user = await this.userManager.signinSilent();
+            this.updateState(user);
+        });
+
+        this.userManager.events.addAccessTokenExpiring(async () => {
+            const user = await this.userManager.signinSilent();
+            this.updateState(user);
         });
     }
 

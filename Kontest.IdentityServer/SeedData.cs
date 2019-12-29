@@ -102,6 +102,8 @@ namespace Kontest.IdentityServer
                     {
                         Log.Debug("bob already exists");
                     }
+
+                    
                 }
             }
         }

@@ -25,7 +25,6 @@ namespace Kontest.WebApi.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         [Route("getall")]
         public IEnumerable<WeatherForecast> Get()
         {

@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Button, Table } from 'reactstrap'
 import { Link } from 'react-router-dom'
+import userService from '../../services/UserService';
+import userOrganizationService from '../../services/UserOrganizationService';
 
 export class User extends Component {
     constructor(props) {
@@ -11,118 +13,91 @@ export class User extends Component {
     }
 
     componentDidMount() {
-        let user = this.fakeFetchUser(this.props.id);
-        this.setState({ user });
+        this.populateUserData();
     }
 
     render() {
         const user = this.state.user;
         return !!user ?
             <div>
-                <img alt={user.Username} src={user.ProfilePicture}></img>
-                <h2>{user.Username} ({user.Role})</h2>
+                <img alt={user.userName} src={user.profilePicture}></img>
+                <h2>{user.userName} ({user.role})</h2>
                 <div>
                     <Button color="primary">Thông tin tài khoản</Button>{' '}
                     <Button tag={Link} to='/organizationrequest/create' color="success">Đăng ký organizer</Button>{' '}
                     <Button color="info">Đăng xuất</Button>
                 </div>
                 <p>Danh sách organization</p>
-                <OrganizationList userId={user.Id} />
+                <OrganizationList userId={user.id} />
             </div> :
             <div></div>
     }
 
-    fakeFetchUser = (id) => {
-        if (!!id) {
-            return {
-                Id: id,
-                ProfilePicture: 'https://picsum.photos/200',
-                Username: 'viethieule',
-                Fullname: 'Viet Hieu Le',
-                Role: 'user'
-            }
-        }
-
-        return null;
+    async populateUserData() {
+        const user = await userService.getUserById(this.props.id);
+        this.setState({ user });
     }
 }
 
 class OrganizationList extends Component {
-    render() {
-        const organizations = this.fakeGetOrganizationByUser(this.props.userId);
-        return (
-            <Table>
-                <thead>
-                    <tr>
-                        <th>Organization Id</th>
-                        <th>Organization Name</th>
-                        <th>My role</th>
-                        <th>Join date</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {organizations.map((org, i) =>
-                        <OrganizationListRow key={i} org={org} />
-                    )}
-                </tbody>
-            </Table>
-        )
+    state = {
+        userOrganizations: []
     }
 
-    fakeGetOrganizationByUser(userId) {
-        return FAKE_ORGANIZATION_LIST;
+    componentDidMount() {
+        this.populateOrganizationList();
+    }
+
+    render() {
+        const { userOrganizations } = this.state;
+        return (
+            userOrganizations.length > 0 ?
+                <Table>
+                    <thead>
+                        <tr>
+                            <th>Organization Id</th>
+                            <th>Organization Name</th>
+                            <th>My role</th>
+                            <th>Join date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {userOrganizations.map((uo) =>
+                            <UserOrganizationListRow key={uo.organization.id} userOrganization={uo} />
+                        )}
+                    </tbody>
+                </Table> :
+                <div></div>
+        );
+    }
+
+    async populateOrganizationList() {
+        const userOrganizations = await userOrganizationService.getUserOrganizationsByUserId(this.props.userId);
+        this.setState({ userOrganizations });
     }
 }
 
-const OrganizationListRow = (props) => {
-    const org = props.org;
+const UserOrganizationListRow = ({ userOrganization }) => {
+    const org = userOrganization.organization;
     return (
         <tr>
-            <td>{org.Id}</td>
+            <td>{org.id}</td>
             <td>
                 <Button
                     tag={Link}
                     to={{
-                        pathname: `/organization/${org.Name}`,
-                        orgId: org.Id
+                        pathname: `/organization/${org.alias}`,
+                        orgId: org.id
                     }}
-                    color="link">{org.Name}
+                    color="link">
+                    {org.name}
                 </Button>
             </td>
-            <td>{org.Role}</td>
-            <td>{
-                [org.JoinDate.getDay(), org.JoinDate.getMonth(), org.JoinDate.getFullYear()].join('.')
-            }</td>
-            <td>{!!org.Action ? org.Action : ''}</td>
+            <td>{userOrganization.orgnizationUserRoleType}</td>
+            <td>{userOrganization.assignedDate}</td>
+            <td>Leave</td>
         </tr>
     )
 }
-
-export const FAKE_ORGANIZATION_LIST = [
-    {
-        Id: 1001,
-        Name: 'CLB Tin học UEH',
-        Role: 'Creator',
-        JoinDate: new Date(),
-        Action: null,
-        ProfilePicture: 'https://picsum.photos/201'
-    },
-    {
-        Id: 1002,
-        Name: 'CLB Tình chái UEH',
-        Role: 'Admin',
-        JoinDate: new Date(),
-        Action: 'Leave',
-        ProfilePicture: 'https://picsum.photos/202'
-    },
-    {
-        Id: 1003,
-        Name: 'CLB Như sận UEH',
-        Role: 'Member',
-        JoinDate: new Date(),
-        Action: 'Leave',
-        ProfilePicture: 'https://picsum.photos/199'
-    }
-]
 

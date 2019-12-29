@@ -18,6 +18,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using AutoMapper;
+using Kontest.Service.AutoMapper;
+using Kontest.Service.Interfaces;
+using Kontest.Service.Implementations;
+using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json;
 
 namespace Kontest.WebApi
 {
@@ -36,7 +44,12 @@ namespace Kontest.WebApi
             services.AddDbContext<KontestDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(op =>
+            {
+                op.SerializerSettings.Converters.Add(new StringEnumConverter());
+                op.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                op.SerializerSettings.DateFormatString = "dd-MM-yyyy";
+            });
 
             services.AddMvcCore(config =>
             {
@@ -57,7 +70,12 @@ namespace Kontest.WebApi
                 .AddEntityFrameworkStores<KontestDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddAuthentication("Bearer")
+            services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
                 .AddIdentityServerAuthentication(options =>
                 {
                     options.Authority = "https://localhost:5000";
@@ -77,6 +95,11 @@ namespace Kontest.WebApi
                 });
             });
 
+            services.AddAutoMapper(typeof(AutoMapperConfig));
+            services.AddScoped<IMapper>(sp => new Mapper(sp.GetRequiredService<AutoMapper.IConfigurationProvider>(), sp.GetService));
+
+            services.AddTransient<DbInit>();
+
             // Add user service
             services.AddScoped<UserManager<ApplicationUser>, UserManager<ApplicationUser>>();
             services.AddScoped<RoleManager<ApplicationRole>, RoleManager<ApplicationRole>>();
@@ -84,6 +107,11 @@ namespace Kontest.WebApi
             // Add repository and unit of work
             services.AddTransient(typeof(IUnitOfWork), typeof(EFUnitOfWork));
             services.AddTransient(typeof(IRepository<,>), typeof(EFRepository<,>));
+
+            // Add kontest services
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IOrganizationService, OrganizationService>();
+            services.AddTransient<IUserOrganizationService, UserOrganizationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -98,6 +126,7 @@ namespace Kontest.WebApi
 
             app.UseRouting();
             app.UseCors("default");
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

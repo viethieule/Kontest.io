@@ -6,6 +6,8 @@ namespace Kontest.Service.ViewModels
 {
     public class UserViewModel
     {
+        public Guid Id { get; set; }
+
         public string Username { get; set; }
 
         public string Email { get; set; }
@@ -23,6 +25,8 @@ namespace Kontest.Service.ViewModels
         public string University { get; set; }
 
         public string ProfilePicture { get; set; }
+
+        public virtual IEnumerable<UserOrganizationViewModel> UserOrganizations { get; set; }
 
         // Audit fields
         public DateTime? CreatedDate { get; set; }

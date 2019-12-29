@@ -14,6 +14,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using AutoMapper;
+using Kontest.Service.AutoMapper;
 
 namespace Kontest.IdentityServer
 {
@@ -53,6 +55,10 @@ namespace Kontest.IdentityServer
             services.AddScoped<UserManager<ApplicationUser>, UserManager<ApplicationUser>>();
             services.AddScoped<SignInManager<ApplicationUser>, SignInManager<ApplicationUser>>();
             services.AddScoped<RoleManager<ApplicationRole>, RoleManager<ApplicationRole>>();
+
+            // Auto mapper
+            services.AddAutoMapper(typeof(AutoMapperConfig));
+            services.AddScoped<IMapper>(sp => new Mapper(sp.GetRequiredService<AutoMapper.IConfigurationProvider>(), sp.GetService));
 
             // Add repository and unit of work
             services.AddTransient(typeof(IUnitOfWork), typeof(EFUnitOfWork));

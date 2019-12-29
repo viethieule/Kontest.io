@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 namespace Kontest.WebApi.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -36,7 +37,7 @@ namespace Kontest.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("getbyid")]
+        [Route("getbyid/{id}")]
         public async Task<ApplicationUser> GetUserById(string id)
         {
             var user = await _userService.GetUserById(id);
@@ -44,8 +45,8 @@ namespace Kontest.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("getbyorgid")]
-        public IEnumerable<ApplicationUser> GetUsersByOrganizationId(string id)
+        [Route("getbyorgid/{id}")]
+        public IEnumerable<UserViewModel> GetUsersByOrganizationId(int id)
         {
             return _userService.GetUsersByOrganizationId(id);
         }

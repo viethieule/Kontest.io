@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Enums\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Kontest.Infrastructure\Kontest.Infrastructure.csproj" />
   </ItemGroup>
 

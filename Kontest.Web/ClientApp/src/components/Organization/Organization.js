@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from 'react';
-import { FAKE_ORGANIZATION_LIST } from '../User/User'
 import { Button, Table, FormGroup, Col, Label, Input } from 'reactstrap'
 import CommomModal from '../Modals/CommonModal';
 import { ModalBody, ModalFooter } from 'reactstrap';
+import organizationService from '../../services/OrganizationService';
+import userService from '../../services/UserService';
 
 export class Organization extends Component {
     constructor(props) {
@@ -21,8 +22,8 @@ export class Organization extends Component {
         const { organization } = this.state;
         return !!organization ?
             <div>
-                <img alt={organization.Name} src={organization.ProfilePicture}></img>
-                <h2>{organization.Name}</h2>
+                <img alt={organization.name} src={organization.profilePicture}></img>
+                <h2>{organization.name}</h2>
                 <div>
                     <Button color="info">Thông tin organizer</Button>{' '}
                     <CommomModal
@@ -33,19 +34,15 @@ export class Organization extends Component {
                     </CommomModal>
                 </div>
                 <p>Danh sách member</p>
-                <MemberList orgId={this.props.orgId} refresh={this.state.toggleRefreshMemberList}></MemberList>
+                <MemberList orgId={this.props.location.orgId} refresh={this.state.toggleRefreshMemberList}></MemberList>
             </div> :
             <div></div>
     }
 
-    populateOrganizationInfo() {
+    async populateOrganizationInfo() {
         const orgId = this.props.location.orgId || this.props.orgId;
-        const organization = this.getOrganizationById(orgId);
+        const organization = await organizationService.getOrganizationById(orgId);
         this.setState({ organization });
-    }
-
-    getOrganizationById(orgId) {
-        return FAKE_ORGANIZATION_LIST.find(org => org.Id === orgId);
     }
 }
 
@@ -81,24 +78,16 @@ class MemberList extends Component {
                     </tr>
                 </thead>
                 <tbody>
-                    {members.map(member => <MemberListRow key={member.Id} member={member} />)}
+                    {members.map(member => <MemberListRow key={member.id} member={member} />)}
                 </tbody>
             </Table> :
             <div></div>
     }
 
-    populateMemberList() {
+    async populateMemberList() {
         const { orgId } = this.props;
-        debugger;
-        const members = this.getMemberListByOrgId(orgId) || [];
+        const members = await userService.getMembersByOrganizationId(orgId);
         this.setState({ members });
-    }
-
-    getMemberListByOrgId(id) {
-        return FAKE_MEMBER_LIST.map(member => {
-            member.OrganizationId = id;
-            return member;
-        });
     }
 }
 
@@ -106,10 +95,10 @@ const MemberListRow = (props) => {
     const { member } = props;
     return (
         <tr>
-            <td>{member.Username}</td>
-            <td>{member.Role}</td>
-            <td>{member.AssignedOn}</td>
-            <td>{member.AssignedBy}</td>
+            <td>{member.username}</td>
+            <td></td>
+            <td>{member.assignedOn}</td>
+            <td>{member.assignedBy}</td>
             <td>Hủy role</td>
         </tr>
     );
@@ -135,17 +124,15 @@ class AssignNewRoleModal extends Component {
     }
 
     componentDidMount() {
-        debugger;
         this.populateRole();
     }
 
     handleSubmit() {
         const { user, role } = this.state.fields;
-        debugger;
         FAKE_MEMBER_LIST.push({
             Id: user.id,
             Username: user.name,
-            Role: this.state.roles.find(r => r.id == role).name,
+            Role: this.state.roles.find(r => r.id === parseInt(role)).name,
             AssignedOn: '16.12.2019', // format dd mm yyyy new Date()
             AssignedBy: 'Alice', // get current user here
         });
@@ -166,7 +153,6 @@ class AssignNewRoleModal extends Component {
         const name = target.name;
         const value = target.value;
 
-        debugger;
         this.setState(prevState => ({
             ...prevState,
             fields: {
