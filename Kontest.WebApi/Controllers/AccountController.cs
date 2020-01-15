@@ -50,5 +50,13 @@ namespace Kontest.WebApi.Controllers
         {
             return _userService.GetUsersByOrganizationId(id);
         }
+
+        [HttpGet]
+        [Route("searchUserByUsername/{keyword}")]
+        public async Task<IEnumerable<UserViewModel>> SearchUserByUsername(string keyword)
+        {
+            var users = await _userService.SearchUserByUsername(keyword);
+            return users;
+        }
     }
 }

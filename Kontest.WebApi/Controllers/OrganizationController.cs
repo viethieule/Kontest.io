@@ -27,6 +27,11 @@ namespace Kontest.WebApi.Controllers
         [Route("getbyid/{id}")]
         public OrganizationViewModel GetOrganizationById(int id)
         {
+            //return new OrganizationViewModel
+            //{
+            //    Id = id,
+            //    Name = "Câu lạc bộ tin học"
+            //};
             return _organizationService.GetOrganizationById(id);
         }
 

@@ -1,8 +1,10 @@
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import { Button, Table } from 'reactstrap'
 import { Link } from 'react-router-dom'
 import userService from '../../services/UserService';
-import userOrganizationService from '../../services/UserOrganizationService';
+import userOrganizationService, { UserOrganizationsRoleType } from '../../services/UserOrganizationService';
+import CommomModal from '../Modals/CommonModal';
+import { ConfirmModal } from '../Modals/ConfirmModal'
 
 export class User extends Component {
     constructor(props) {
@@ -80,24 +82,50 @@ class OrganizationList extends Component {
 
 const UserOrganizationListRow = ({ userOrganization }) => {
     const org = userOrganization.organization;
+    const roleType = userOrganization.orgnizationUserRoleType;
+
+    const [deleted, setDeleted] = useState(false);
+
+    let actionBtn = '';
+    if (roleType && roleType.value !== UserOrganizationsRoleType.CREATOR) {
+        actionBtn = (
+            <CommomModal
+                triggerButtonClass="danger"
+                triggerButtonLabel="Leave"
+                title="Leave organization"
+                callBack={() => leaveOrganization(userOrganization.id)}
+            >
+                <ConfirmModal message="Cai dit me may muon leave ?" />
+            </CommomModal>
+        )
+    }
+
+    const leaveOrganization = async (userOrgId) => {
+        alert(`Disassociate user organization ${userOrgId}`);
+        const deleted = await userOrganizationService.deleteUserOrganizationById(userOrgId);
+        setDeleted(deleted);
+    }
+
     return (
-        <tr>
-            <td>{org.id}</td>
-            <td>
-                <Button
-                    tag={Link}
-                    to={{
-                        pathname: `/organization/${org.alias}`,
-                        orgId: org.id
-                    }}
-                    color="link">
-                    {org.name}
-                </Button>
-            </td>
-            <td>{userOrganization.orgnizationUserRoleType}</td>
-            <td>{userOrganization.assignedDate}</td>
-            <td>Leave</td>
-        </tr>
+        !deleted ?
+            <tr>
+                <td>{org.id}</td>
+                <td>
+                    <Button
+                        tag={Link}
+                        to={{
+                            pathname: `/organization/${org.alias}`,
+                            orgId: org.id
+                        }}
+                        color="link">
+                        {org.name}
+                    </Button>
+                </td>
+                <td>{!!roleType ? roleType.name : ''}</td>
+                <td>{userOrganization.assignedDate}</td>
+                <td>{actionBtn}</td>
+            </tr> :
+            null
     )
 }
 

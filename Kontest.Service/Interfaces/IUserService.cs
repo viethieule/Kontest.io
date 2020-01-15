@@ -13,5 +13,6 @@ namespace Kontest.Service.Interfaces
         Task<string> Register(UserViewModel model);
         Task<ApplicationUser> GetUserById(string id);
         List<UserViewModel> GetUsersByOrganizationId(int id);
+        Task<IEnumerable<UserViewModel>> SearchUserByUsername(string keyword);
     }
 }

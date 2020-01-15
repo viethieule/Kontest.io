@@ -4,14 +4,16 @@ using Kontest.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Kontest.Data.Migrations
 {
     [DbContext(typeof(KontestDbContext))]
-    partial class KontestDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200114151337_ChangeForeignKeyNameRequestingUserId")]
+    partial class ChangeForeignKeyNameRequestingUserId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

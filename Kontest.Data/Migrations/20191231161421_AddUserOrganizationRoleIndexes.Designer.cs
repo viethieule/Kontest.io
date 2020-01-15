@@ -4,14 +4,16 @@ using Kontest.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Kontest.Data.Migrations
 {
     [DbContext(typeof(KontestDbContext))]
-    partial class KontestDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191231161421_AddUserOrganizationRoleIndexes")]
+    partial class AddUserOrganizationRoleIndexes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -292,6 +294,9 @@ namespace Kontest.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("ActionTypeCode")
+                        .HasColumnType("int");
+
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
@@ -300,9 +305,6 @@ namespace Kontest.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("CreatedOrganizationId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("OrgRequestStatus")
                         .HasColumnType("int");
 
                     b.Property<int>("OrganizationCategoryId")
@@ -326,6 +328,9 @@ namespace Kontest.Data.Migrations
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedOrganizationId")
@@ -334,7 +339,7 @@ namespace Kontest.Data.Migrations
 
                     b.HasIndex("OrganizationCategoryId");
 
-                    b.HasIndex("RequestingUserId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("OrganizationRequests");
                 });
@@ -518,9 +523,7 @@ namespace Kontest.Data.Migrations
 
                     b.HasOne("Kontest.Model.Entities.ApplicationUser", "RequestingUser")
                         .WithMany()
-                        .HasForeignKey("RequestingUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Kontest.Model.Entities.UserOrganization", b =>

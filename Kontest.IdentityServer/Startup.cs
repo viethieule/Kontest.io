@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AutoMapper;
 using Kontest.Service.AutoMapper;
+using Microsoft.IdentityModel.Logging;
 
 namespace Kontest.IdentityServer
 {
@@ -77,7 +78,9 @@ namespace Kontest.IdentityServer
                 })
                 .AddEntityFrameworkStores<KontestDbContext>()
                 .AddDefaultTokenProviders();
-            
+
+            IdentityModelEventSource.ShowPII = true;
+
             var builder = services.AddIdentityServer(options =>
                 {
                     options.Events.RaiseErrorEvents = true;

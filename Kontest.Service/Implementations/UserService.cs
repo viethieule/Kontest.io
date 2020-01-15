@@ -80,6 +80,20 @@ namespace Kontest.Service.Implementations
             return user;
         }
 
+        public async Task<IEnumerable<UserViewModel>> SearchUserByUsername(string keyword)
+        {
+            if (string.IsNullOrEmpty(keyword))
+            {
+                return new List<UserViewModel>();
+            }
+
+            var users = await _userManager.Users
+                .Where(u => u.UserName.Contains(keyword))
+                .ProjectTo<UserViewModel>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+            return users;
+        }
+
         public List<UserViewModel> GetUsersByOrganizationId(int id)
         {
             var userOrganizations = _userOrgnizationRepository

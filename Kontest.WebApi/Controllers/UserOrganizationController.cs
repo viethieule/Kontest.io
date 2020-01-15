@@ -27,5 +27,27 @@ namespace Kontest.WebApi.Controllers
         {
             return _userOrganizationService.GetOrganizationsByUserId(id);
         }
+
+        [HttpGet]
+        [Route("getUserOrganizationsByOrganizationId/{id}")]
+        public IEnumerable<UserOrganizationViewModel> GetUserOrganizationsByOrganizationId(int id)
+        {
+            return _userOrganizationService.GetUsersByOrganizationsId(id);
+        }
+
+        [HttpDelete]
+        [Route("deleteUserOrganizationByid/{id}")]
+        public void DeleteUserOrganizationById(int id)
+        {
+            _userOrganizationService.DeleteUserOrganizationById(id);
+        }
+
+        [HttpPost]
+        [Route("addUserOrganization")]
+        public async Task<UserOrganizationViewModel> AddUserOrganization(UserOrganizationViewModel userOrganizationVm)
+        {
+            var user = await _userOrganizationService.AddUserOrganization(userOrganizationVm);
+            return user;
+        }
     }
 }

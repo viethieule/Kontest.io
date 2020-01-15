@@ -8,6 +8,12 @@ namespace Kontest.Service.AutoMapper
     {
         public ViewModelToDomainMappingProfile()
         {
+            CreateMap<UserOrganizationViewModel, UserOrganization>();
+            CreateMap<UserViewModel, ApplicationUser>();
+            CreateMap<OrganizationViewModel, Organization>();
+            CreateMap<EventViewModel, Event>();
+            CreateMap<OrganizationRequestViewModel, OrganizationRequest>();
+            CreateMap<OrganizationCategoryViewModel, OrganizationCategory>();
         }
     }
 }

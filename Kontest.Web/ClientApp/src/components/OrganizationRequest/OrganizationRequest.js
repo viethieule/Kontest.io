@@ -1,13 +1,16 @@
 import React, { Component } from 'react'
 import { FormGroup, Col, Label, Input } from 'reactstrap'
+import organizationCategoryService from '../../services/OrganizationCategoryService';
+import organizationRequestService from '../../services/OrganizationRequestService';
+import authService from '../../services/AuthService';
 
 export class OrganizationRequest extends Component {
     constructor(props) {
         super(props);
         this.state = {
             request: {
-                OrganizationName: '',
-                OrganizationCategory: ''
+                organizationName: '',
+                organizationCategoryId: ''
             },
             categories: []
         }
@@ -22,17 +25,30 @@ export class OrganizationRequest extends Component {
         const value = target.value;
 
         this.setState(prevState => ({
-             ...prevState,
-             request: {
-                 ...prevState.request,
-                 [name]: value
-             }
+            ...prevState,
+            request: {
+                ...prevState.request,
+                [name]: value
+            }
         }));
     }
 
-    handleSubmit(event) {
+    async handleSubmit(event) {
         event.preventDefault();
-        alert(`Name ${this.state.request.OrganizationName} Category ${this.state.request.OrganizationCategory}`)
+
+
+        const currentUser = await authService.getUser();
+        if (currentUser) {
+            const createdRequest = await organizationRequestService.create({
+                ...this.state.request,
+                requestingUserId: currentUser.sub
+            });
+
+            if (createdRequest) {
+                var { organizationName, organizationCategoryId } = this.state.request;
+                alert(`Request created for ${organizationName}, category ${organizationCategoryId}`);
+            }
+        }
     }
 
     componentDidMount() {
@@ -45,17 +61,17 @@ export class OrganizationRequest extends Component {
                 <h1>Request tạo organization</h1>
                 <form onSubmit={this.handleSubmit}>
                     <FormGroup row>
-                        <Label for="OrganizationName" sm={2}>Organization fullname</Label>
+                        <Label for="organizationName" sm={2}>Organization fullname</Label>
                         <Col sm={10}>
-                            <Input type="text" name="OrganizationName" value={this.state.request.OrganizationName || ''} onChange={this.handleOnChange}></Input>
+                            <Input type="text" name="organizationName" value={this.state.request.organizationName || ''} onChange={this.handleOnChange}></Input>
                         </Col>
                     </FormGroup>
                     <FormGroup row>
-                        <Label for="OrganizationCategory" sm={2}>Organization category</Label>
+                        <Label for="organizationCategoryId" sm={2}>Organization category</Label>
                         <Col sm={10}>
-                            <Input type="select" name="OrganizationCategory" value={this.state.request.OrganizationCategory || ''} onChange={this.handleOnChange}>
+                            <Input type="select" name="organizationCategoryId" value={this.state.request.organizationCategoryId || ''} onChange={this.handleOnChange}>
                                 {this.state.categories.map(category =>
-                                    <option key={category.value} value={category.value}>{category.text}</option>
+                                    <option key={category.id} value={category.id}>{category.name}</option>
                                 )}
                             </Input>
                         </Col>
@@ -66,32 +82,9 @@ export class OrganizationRequest extends Component {
         )
     }
 
-    populateCategory() {
-        const categories = this.fakeFetchCategory() || [];
+    async populateCategory() {
+        const categories = await organizationCategoryService.getAllOrgCategory();
         this.setState({ categories });
-        categories.length > 0 && this.setState({ request: { OrganizationCategory: categories[0].value } })
+        categories.length > 0 && this.setState({ request: { organizationCategoryId: categories[0].id } })
     }
-
-    fakeFetchCategory = () => [
-        {
-            text: 'Học thuật',
-            value: 1
-        },
-        {
-            text: 'Nghệ thuật',
-            value: 2
-        },
-        {
-            text: 'Võ thuật',
-            value: 3
-        },
-        {
-            text: 'Bí thuật',
-            value: 4
-        },
-        {
-            text: 'Ma thuật',
-            value: 5
-        }
-    ];
 }

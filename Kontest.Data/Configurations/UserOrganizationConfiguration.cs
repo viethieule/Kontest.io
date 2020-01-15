@@ -14,6 +14,7 @@ namespace Kontest.Data.Configurations
             entity.HasKey(uo => uo.Id);
             entity.HasOne(x => x.User).WithMany(x => x.UserOrganizations).HasForeignKey(x => x.UserId);
             entity.HasOne(x => x.Organization).WithMany(x => x.UserOrganizations).HasForeignKey(x => x.OrganizationId);
+            entity.HasIndex(x => new { x.OrganizationId, x.UserId, x.OrgnizationUserRoleType }).IsUnique();
         }
     }
 }

@@ -26,6 +26,7 @@ using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json;
+using Kontest.WebApi.CustomJsonConverters;
 
 namespace Kontest.WebApi
 {
@@ -46,7 +47,7 @@ namespace Kontest.WebApi
 
             services.AddControllers().AddNewtonsoftJson(op =>
             {
-                op.SerializerSettings.Converters.Add(new StringEnumConverter());
+                op.SerializerSettings.Converters.Add(new EnumToKeyValuePairConverter());
                 op.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 op.SerializerSettings.DateFormatString = "dd-MM-yyyy";
             });
@@ -112,6 +113,8 @@ namespace Kontest.WebApi
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IOrganizationService, OrganizationService>();
             services.AddTransient<IUserOrganizationService, UserOrganizationService>();
+            services.AddTransient<IOrganizationCategoryService, OrganizationCategoryService>();
+            services.AddTransient<IOrganizationRequestService, OrganizationRequestService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -30,6 +30,7 @@ namespace Kontest.Service.Implementations
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+
         public OrganizationViewModel GetOrganizationById(int id)
         {
             var org = _organizationRepository.FindById(id);
